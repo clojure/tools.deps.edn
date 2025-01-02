@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -e
+
+version_template=`cat VERSION_TEMPLATE`
+commit_count=`git rev-list HEAD --count`
+
+if [[ "$version_template" =~ ^[0-9]+\.[0-9]+\.GENERATED_VERSION(-[a-zA-Z0-9]+)?$ ]]; then
+
+    echo ${version_template/GENERATED_VERSION/$commit_count}
+
+else
+    echo "Invalid version template string: $version_template" >&2
+    exit -1
+fi
+
+

@@ -8,87 +8,126 @@
 
 (ns clojure.tools.deps.edn
   (:require
+    [clojure.edn :as edn]
     [clojure.java.io :as jio]
     [clojure.string :as str]
-    [clojure.tools.deps.util.io :as io]
     [clojure.tools.deps.specs :as specs]
     [clojure.walk :as walk])
   (:import
-    [java.io File]
+    [java.io File PushbackReader]
     [clojure.lang EdnReader$ReaderException]
     ))
 
 (set! *warn-on-reflection* true)
 
-;;;; deps.edn reading
+;;;; Read
+
+(defonce ^:private nl (System/getProperty "line.separator"))
+
+(defn- printerrln
+  "println to *err*"
+  [& msgs]
+  (binding [*out* *err*
+            *print-readably* nil]
+    (pr (str (str/join " " msgs) nl))
+    (flush)))
 
 (defn- io-err
-  ^Throwable [fmt ^File f]
-  (let [path (.getAbsolutePath f)]
-    (ex-info (format fmt path) {:path path})))
+  "Helper function to construct an ex-info for an exception reading
+  file at path with the message format fmt (which should have one
+  variable for the path)."
+  ^Throwable [fmt & {:keys [path]}]
+  (let [abs-path (.getAbsolutePath (jio/file path))]
+    (ex-info (format fmt abs-path) {:path abs-path})))
 
-(defn- slurp-edn-map
-  "Read the file specified by the path-segments, slurp it, and read it as edn."
-  [^File f]
-  (let [val (try (io/slurp-edn f)
-                 (catch EdnReader$ReaderException e (throw (io-err (str (.getMessage e) " (%s)") f)))
-                 (catch RuntimeException t
-                   (if (str/starts-with? (.getMessage t) "EOF while reading")
-                     (throw (io-err "Error reading edn, delimiter unmatched (%s)" f))
-                     (throw (io-err (str "Error reading edn. " (.getMessage t) " (%s)") f)))))]
-    (if (specs/valid-deps? val)
-      val
-      (throw (io-err (str "Error reading deps %s. " (specs/explain-deps val)) f)))))
+(defn read-edn
+  "Read edn from file f, which should contain exactly one edn value.
+  If f exists but is blank, nil is returned.
+  Throws if file is unreadable or contains multiple values.
+  Opts:
+    :path String path to file being read"
+  [^File f & opts]
+  (with-open [rdr (PushbackReader. (jio/reader f))]
+    (let [EOF (Object.)
+          val (try
+                (let [val (edn/read {:default tagged-literal :eof EOF} rdr)]
+                  (if (identical? EOF val)
+                    nil ;; empty file
+                    (if (not (identical? EOF (edn/read {:eof EOF} rdr)))
+                      (throw (ex-info "Expected edn to contain a single value." {}))
+                      val)))
+                (catch EdnReader$ReaderException e
+                  (throw (io-err (str (.getMessage e) " (%s)") opts)))
+                (catch RuntimeException t
+                  (if (str/starts-with? (.getMessage t) "EOF while reading")
+                    (throw (io-err "Error reading edn, delimiter unmatched (%s)" opts))
+                    (throw (io-err (str "Error reading edn. " (.getMessage t) " (%s)") opts)))))])))
 
-;; all this canonicalization is deprecated and will eventually be removed
+(defn validate
+  "Validate a deps-edn map according to the specs, throw if invalid.
+  Opts:
+    :path String path to file being read"
+  [deps-edn & opts]
+  (if (specs/valid-deps? deps-edn)
+    deps-edn
+    (throw (io-err (str "Error reading deps %s. " (specs/explain-deps deps-edn)) opts))))
+
+;;;; Canonicalize
 
 (defn- canonicalize-sym
-  ([s]
-   (canonicalize-sym s nil))
-  ([s file-name]
-   (if (simple-symbol? s)
-     (let [cs (as-> (name s) n (symbol n n))]
-       (io/printerrln "DEPRECATED: Libs must be qualified, change" s "=>" cs
-         (if file-name (str "(" file-name ")") ""))
-       cs)
-     s)))
+  [s & opts]
+  (if (simple-symbol? s)
+    (let [cs (as-> (name s) n (symbol n n))]
+      (printerrln "DEPRECATED: Libs must be qualified, change" s "=>" cs
+        (if-let [path (:path opts)] (str "(" path ")" "")))
+      cs)
+    s))
 
 (defn- canonicalize-exclusions
-  [{:keys [exclusions] :as coord} file-name]
+  [{:keys [exclusions] :as coord} & opts]
   (if (seq (filter simple-symbol? exclusions))
-    (assoc coord :exclusions (mapv #(canonicalize-sym % file-name) exclusions))
+    (assoc coord :exclusions (mapv #(canonicalize-sym % opts) exclusions))
     coord))
 
 (defn- canonicalize-dep-map
-  [deps-map file-name]
+  [deps-map & opts]
   (when deps-map
     (reduce-kv (fn [acc lib coord]
-                 (let [new-lib (if (simple-symbol? lib) (canonicalize-sym lib file-name) lib)
-                       new-coord (canonicalize-exclusions coord file-name)]
+                 (let [new-lib (if (simple-symbol? lib) (canonicalize-sym lib opts) lib)
+                       new-coord (canonicalize-exclusions coord opts)]
                    (assoc acc new-lib new-coord)))
       {} deps-map)))
 
-(defn- canonicalize-all-syms
-  ([deps-edn]
-   (canonicalize-all-syms deps-edn nil))
-  ([deps-edn file-name]
-   (walk/postwalk
-     (fn [x]
-       (if (map? x)
-         (reduce (fn [xr k]
-                   (if-let [xm (get xr k)]
-                     (assoc xr k (canonicalize-dep-map xm file-name))
-                     xr))
-           x #{:deps :default-deps :override-deps :extra-deps :classpath-overrides})
-         x))
-     deps-edn)))
+(defn canonicalize
+  "Canonicalize a deps.edn map (convert simple lib symbols to qualified lib symbols).
+  Opts:
+    :path String path to file being read"
+  [deps-edn & opts]
+  (walk/postwalk
+    (fn [x]
+      (if (map? x)
+        (reduce (fn [xr k]
+                  (if-let [xm (get xr k)]
+                    (assoc xr k (canonicalize-dep-map xm opts))
+                    xr))
+          x #{:deps :default-deps :override-deps :extra-deps :classpath-overrides})
+        x))
+    deps-edn))
 
-(defn slurp-deps
-  "Read a single deps.edn file from disk and canonicalize symbols,
-  return a deps map. If the file doesn't exist, returns nil."
-  [^File dep-file]
-  (when (.exists dep-file)
-    (-> dep-file slurp-edn-map (canonicalize-all-syms (.getPath dep-file)))))
+;;;; Read deps with validation and canonicalization
+
+(defn read-deps
+  "Corece f to a file with jio/file, then read, validate, and canonicalize
+  the deps.edn. This is the primary entry point for reading.
+
+  Opts: none"
+  [f & opts]
+  (let [file (jio/file f)
+        opts {:path (.getPath file)}]
+    (when (.exists file)
+      (-> file (read-edn opts) (validate opts) (canonicalize opts)))))
+
+;;;; deps edn manipulation
 
 (defn- merge-or-replace
   "If maps, merge, otherwise replace"

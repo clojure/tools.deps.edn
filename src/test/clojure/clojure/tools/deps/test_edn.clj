@@ -6,7 +6,7 @@
     [java.io File]))
 
 (deftest test-slurp-deps-on-nonexistent-file
-  (is (nil? (deps-edn/slurp-deps (File. "NONEXISTENT_FILE")))))
+  (is (nil? (deps-edn/read-deps (File. "NONEXISTENT_FILE")))))
 
 (deftest test-merge-or-replace
   (are [vals ret]

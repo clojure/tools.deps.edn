@@ -5,9 +5,9 @@ Reader for deps.edn
 
 # Rationale
 
-This library is a small library for reading and understanding deps.edn files. It can
-be used in scenarios where the full [tools.deps](https://github.com/clojure/tools.deps)
-library is not needed.
+This is a small library for reading and manipulating deps.edn files and data structures.
+It can be used in scenarios where the full [tools.deps](https://github.com/clojure/tools.deps)
+library is not needed for dep expansion (which pulls in many large libraries).
 
 * [deps.edn Reference](https://clojure.org/reference/deps_edn)
 

@@ -139,7 +139,22 @@
                        (sort-by #(- (count (:in %))))
                        (sort-by #(- (count (:path %)))))
             {:keys [path pred val reason via in]} (first problems)]
-        (str "Found: " (pr-str val) ", expected: " (if reason reason (s/abbrev pred)))))))
+        (str "Found: " (pr-str val) ", expected: " (if reason reason (s/abbrev pred)) ", in: " (pr-str in))))))
+
+;; API
+
+(s/fdef clojure.tools.deps/resolve-deps
+  :args (s/cat :deps ::deps-map :options ::resolve-args)
+  :ret ::lib-map)
+
+(s/fdef clojure.tools.deps/make-classpath-map
+  :args (s/cat :deps ::deps-map, :libs ::lib-map, :classpath-args ::classpath-args)
+  :ret map?)
+
+(s/fdef clojure.tools.deps/make-classpath
+  :args (s/cat :libs ::lib-map, :paths ::paths, :classpath-args ::classpath-args)
+  :ret string?)
+
 
 (comment
   ;; some scratch code to recursively check every deps.edn under

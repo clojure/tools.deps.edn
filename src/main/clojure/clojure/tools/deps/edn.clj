@@ -7,14 +7,17 @@
 ;   You must not remove this notice, or any other, from this software.
 
 (ns clojure.tools.deps.edn
+  "Functions for reading, validating, and manipulating deps.edn
+  files and data structures."
   (:require
     [clojure.edn :as edn]
     [clojure.java.io :as jio]
     [clojure.string :as str]
     [clojure.tools.deps.specs :as specs]
+    [clojure.tools.deps.util.dir :as dir]
     [clojure.walk :as walk])
   (:import
-    [java.io File PushbackReader]
+    [java.io BufferedReader File InputStreamReader PushbackReader Reader]
     [clojure.lang EdnReader$ReaderException]
     ))
 
@@ -40,31 +43,34 @@
   (let [abs-path (.getAbsolutePath (jio/file path))]
     (ex-info (format fmt abs-path) {:path abs-path})))
 
-(defn read-edn
-  "Read edn from file f, which should contain exactly one edn value.
-  If f exists but is blank, nil is returned.
-  Throws if file is unreadable or contains multiple values.
+(defn- read-edn
+  "Read edn from Reader r, which should contain exactly one edn value.
+  If source exists but is blank, nil is returned.
+  Throws if source is unreadable or contains multiple values.
+
   Opts:
-    :path String path to file being read"
-  [^File f & opts]
-  (with-open [rdr (PushbackReader. (jio/reader f))]
-    (let [EOF (Object.)
-          val (try
-                (let [val (edn/read {:default tagged-literal :eof EOF} rdr)]
-                  (if (identical? EOF val)
-                    nil ;; empty file
-                    (if (not (identical? EOF (edn/read {:eof EOF} rdr)))
-                      (throw (ex-info "Expected edn to contain a single value." {}))
-                      val)))
-                (catch EdnReader$ReaderException e
-                  (throw (io-err (str (.getMessage e) " (%s)") opts)))
-                (catch RuntimeException t
-                  (if (str/starts-with? (.getMessage t) "EOF while reading")
-                    (throw (io-err "Error reading edn, delimiter unmatched (%s)" opts))
-                    (throw (io-err (str "Error reading edn. " (.getMessage t) " (%s)") opts)))))])))
+    :path String path to file being read, for error reporting"
+  [^Reader r & opts]
+  (with-open [rdr (PushbackReader. r)]
+    (let [EOF (Object.)]
+      (try
+        (let [val (edn/read {:default tagged-literal :eof EOF} rdr)]
+          (if (identical? EOF val)
+            nil ;; empty file
+            (if (not (identical? EOF (edn/read {:eof EOF} rdr)))
+              (throw (ex-info "Expected edn to contain a single value." {}))
+              val)))
+        (catch EdnReader$ReaderException e
+          (throw (io-err (str (.getMessage e) " (%s)") opts)))
+        (catch RuntimeException t
+          (if (str/starts-with? (.getMessage t) "EOF while reading")
+            (throw (io-err "Error reading edn, delimiter unmatched (%s)" opts))
+            (throw (io-err (str "Error reading edn. " (.getMessage t) " (%s)") opts))))))))
 
 (defn validate
   "Validate a deps-edn map according to the specs, throw if invalid.
+  Returns the deps-edn map.
+
   Opts:
     :path String path to file being read"
   [deps-edn & opts]
@@ -79,7 +85,7 @@
   (if (simple-symbol? s)
     (let [cs (as-> (name s) n (symbol n n))]
       (printerrln "DEPRECATED: Libs must be qualified, change" s "=>" cs
-        (if-let [path (:path opts)] (str "(" path ")" "")))
+        (if-let [path (:path opts)] (str "(" path ")") ""))
       cs)
     s))
 
@@ -100,6 +106,8 @@
 
 (defn canonicalize
   "Canonicalize a deps.edn map (convert simple lib symbols to qualified lib symbols).
+  Returns the deps-edn map.
+
   Opts:
     :path String path to file being read"
   [deps-edn & opts]
@@ -119,13 +127,89 @@
 (defn read-deps
   "Corece f to a file with jio/file, then read, validate, and canonicalize
   the deps.edn. This is the primary entry point for reading.
+  Use read-edn, validate, or canonicalize for individual steps.
 
-  Opts: none"
+  Opts: none for now"
   [f & opts]
   (let [file (jio/file f)
         opts {:path (.getPath file)}]
     (when (.exists file)
-      (-> file (read-edn opts) (validate opts) (canonicalize opts)))))
+      (-> file jio/reader (read-edn opts) (validate opts) (canonicalize opts)))))
+
+;;;; Dep chain lookups
+
+(defn root-deps
+  "Read the root deps.edn resource from the classpath at the path
+  clojure/tools/deps/deps.edn"
+  []
+  (let [url (jio/resource "clojure/tools/deps/deps.edn")]
+    ;; TODO: separate file reading and resource reading
+    (read-edn (BufferedReader. (InputStreamReader. (.openStream url))))))
+
+(defn user-deps-path
+  "Use the same logic as clj to calculate the location of the user deps.edn.
+  Note that it's possible no file may exist at this location."
+  []
+  (let [config-env (System/getenv "CLJ_CONFIG")
+        xdg-env (System/getenv "XDG_CONFIG_HOME")
+        home (System/getProperty "user.home")
+        config-dir (cond config-env config-env
+                         xdg-env (str xdg-env File/separator "clojure")
+                         :else (str home File/separator ".clojure"))]
+    (str config-dir File/separator "deps.edn")))
+
+(defn user-deps
+  "Calculate the user deps.edn per user-deps-path, read and
+  return the deps.edn data"
+  []
+  (-> (user-deps-path) jio/file dir/canonicalize read-deps))
+
+(defn project-deps-path
+  "Calculate the project deps.edn location. This
+  is the deps.edn in the current directory, as defined by
+  clojure.tools.deps.util.dir/*the-dir* - use with-dir
+  to push a new local directory context around a call to
+  project-deps-path."
+  []
+  (str dir/*the-dir* File/separator "deps.edn"))
+
+(defn project-deps
+  "Calculate the project deps.edn location "
+  []
+  (-> (project-deps-path) jio/file dir/canonicalize read-deps))
+
+(defn- choose-deps
+  [requested standard-fn]
+  (cond
+    (= :standard requested) (standard-fn)
+    (string? requested) (-> requested jio/file dir/canonicalize read-deps)
+    (or (nil? requested) (map? requested)) requested
+    :else (throw (ex-info (format "Unexpected dep source: %s" (pr-str requested))
+                   {:requested requested}))))
+
+(defn create-edn-maps
+  "Takes optional map of location sources, keys = :root :user :project :extra
+  where each key may be:
+    :standard (default) - to get the default source
+    string - for file path to source
+    nil - to omit
+    map - a literal map to use
+
+  Returns a set of deps edn maps with the same keys :root :user :project :extra.
+  Keys may be missing if source was nil or file was missing."
+  ([]
+   (create-edn-maps nil))
+  ([{:keys [root user project extra] :as params
+     :or {root :standard, user :standard, project :standard}}]
+   (let [root-edn (choose-deps root #(root-deps))
+         user-edn (choose-deps user #(user-deps))
+         project-edn (choose-deps project #(project-deps))
+         extra-edn (choose-deps extra (constantly nil))]
+     (cond-> {}
+       root-edn (assoc :root root-edn)
+       user-edn (assoc :user user-edn)
+       project-edn (assoc :project project-edn)
+       extra-edn (assoc :extra extra-edn)))))
 
 ;;;; deps edn manipulation
 
@@ -175,7 +259,7 @@
       merge
       (fn [_v1 v2] v2))))
 
-(defn- merge-alias-maps
+(defn merge-alias-maps
   "Like merge-with, but using custom per-alias-key merge function"
   [& ms]
   (reduce
@@ -191,20 +275,3 @@
   (->> alias-kws
     (map #(get-in edn-map [:aliases %]))
     (apply merge-alias-maps)))
-
-
-
-
-(defn- chase-key
-  "Given an aliases set and a keyword k, return a flattened vector of path
-  entries for that k, resolving recursively if needed, or nil."
-  [aliases k]
-  (let [path-coll (get aliases k)]
-    (when (seq path-coll)
-      (into [] (mapcat #(if (string? %) [[% {:path-key k}]] (chase-key aliases %))) path-coll))))
-
-(defn- flatten-paths
-  [{:keys [paths aliases] :as deps-edn-map} {:keys [extra-paths] :as classpath-args}]
-  (let [aliases' (assoc aliases :paths paths :extra-paths extra-paths)]
-    (into [] (comp (mapcat #(chase-key aliases' %)) (remove nil?)) [:extra-paths :paths])))
-

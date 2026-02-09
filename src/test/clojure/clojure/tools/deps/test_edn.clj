@@ -1,16 +1,16 @@
 (ns clojure.tools.deps.test-edn
   (:require
-    [clojure.test :refer [deftest is are testing]]
-    [clojure.tools.deps.edn :as deps-edn])
+    [clojure.test :refer [are deftest is]]
+    [clojure.tools.deps.edn :as depsedn])
   (:import
     [java.io File]))
 
-(deftest test-slurp-deps-on-nonexistent-file
-  (is (nil? (deps-edn/read-deps (File. "NONEXISTENT_FILE")))))
+(deftest test-read-deps-on-nonexistent-file
+  (is (nil? (depsedn/read-deps (File. "NONEXISTENT_FILE")))))
 
 (deftest test-merge-or-replace
   (are [vals ret]
-    (= ret (apply #'deps-edn/merge-or-replace vals))
+    (= ret (apply #'depsedn/merge-or-replace vals))
 
     [nil nil] nil
     [nil {:a 1}] {:a 1}
@@ -21,7 +21,7 @@
     [1 2] 2))
 
 (deftest test-merge-edns
-  (is (= (deps-edn/merge-edns
+  (is (= (depsedn/merge-edns
            [{:deps {'a {:v 1}, 'b {:v 1}}
              :a/x {:a 1}
              :a/y "abc"}
@@ -35,7 +35,7 @@
 
 (deftest merge-alias-maps
   (are [m1 m2 out]
-    (= out (#'deps-edn/merge-alias-maps m1 m2))
+    (= out (#'depsedn/merge-alias-maps m1 m2))
 
     {} {} {}
     {} {:extra-deps {:a 1}} {:extra-deps {:a 1}}
@@ -50,4 +50,3 @@
     {:jvm-opts ["-Xms100m" "-Xmx200m"]} {:jvm-opts ["-Dfoo=bar"]} {:jvm-opts ["-Xms100m" "-Xmx200m" "-Dfoo=bar"]}
     {} {:main-opts ["foo.bar" "1"]} {:main-opts ["foo.bar" "1"]}
     {:main-opts ["foo.bar" "1"]} {:main-opts ["foo.baz" "2"]} {:main-opts ["foo.baz" "2"]}))
-

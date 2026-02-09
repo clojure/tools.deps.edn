@@ -13,20 +13,20 @@ library is not needed for dep expansion (which pulls in many large libraries).
 
 # Release Information
 
-Latest release: TBD
+Latest release: 0.9.13
 
 * [All released versions](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.clojure%22%20AND%20a%3A%22tools.deps.edn%22)
 
 [deps.edn](https://clojure.org/reference/deps_edn) dependency information:
 
 ```
-org.clojure/tools.deps.edn {:mvn/version "TBD"}
+org.clojure/tools.deps.edn {:mvn/version "0.9.13"}
 ```
 
 [Leiningen](https://github.com/technomancy/leiningen/) dependency information:
 
 ```
-[org.clojure/tools.deps.edn "TBD"]
+[org.clojure/tools.deps.edn "0.9.13"]
 ```
 
 [Maven](https://maven.apache.org) dependency information:
@@ -35,7 +35,7 @@ org.clojure/tools.deps.edn {:mvn/version "TBD"}
 <dependency>
   <groupId>org.clojure</groupId>
   <artifactId>tools.deps.edn</artifactId>
-  <version>TBD</version>
+  <version>0.9.13</version>
 </dependency>
 ```
 

@@ -49,7 +49,7 @@ Usually, you should use the `read-deps` function to read a deps.edn file, valida
 
 However, these component functions may also occasionally be useful:
 
-* (read-edn r & opts)` - reads a single edn value from a Reader r
+* (read-edn r & opts) - reads a single edn value from a Reader r
 * (validate deps-edn & opts) - validate a deps.edn map against the specs and throw or return the valid map
 * (canonicalize deps-edn & opts) - canoncialize a deps.edn map and return it
 

@@ -143,7 +143,6 @@
   clojure/tools/deps/deps.edn"
   []
   (let [url (jio/resource "clojure/tools/deps/deps.edn")]
-    ;; TODO: separate file reading and resource reading
     (read-edn (BufferedReader. (InputStreamReader. (.openStream url))))))
 
 (defn user-deps-path

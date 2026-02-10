@@ -31,7 +31,7 @@ org.clojure/tools.deps.edn {:mvn/version "0.9.13"}
 
 [Maven](https://maven.apache.org) dependency information:
 
-```
+```xml
 <dependency>
   <groupId>org.clojure</groupId>
   <artifactId>tools.deps.edn</artifactId>
@@ -41,9 +41,37 @@ org.clojure/tools.deps.edn {:mvn/version "0.9.13"}
 
 # API 
 
-For info on using tools.deps.edn as a library, see:
+## Reading, validating, and canonicalization
 
-* [API Docs](https://clojure.github.io/tools.deps.edn)
+Usually, you should use the `read-deps` function to read a deps.edn file, validate, and canonicalize it:
+
+* (read-deps f & opts) - coerce f to a File, then read, validate, canonicalize and return a deps.edn map
+
+However, these component functions may also occasionally be useful:
+
+* (read-edn r & opts)` - reads a single edn value from a Reader r
+* (validate deps-edn & opts) - validate a deps.edn map against the specs and throw or return the valid map
+* (canonicalize deps-edn & opts) - canoncialize a deps.edn map and return it
+
+## Deps chain
+
+These functions are available to get individual or multiple of the standard deps.edn maps in the chain:
+
+* ([root-deps](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/root-deps)) - return the root deps read as a resource
+* ([user-deps-path](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/user-deps-path)) - calculate the path to the user deps.edn
+* ([user-deps](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/user-deps)) - use `user-deps-path`, then read and return it (or nil if none exists)
+* ([project-deps-path](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/project-deps-path)) - calculate the path to the project deps.edn, using the dir context as the current directory
+* ([project-deps](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/project-deps)) - use `project-deps-path`, then read and return it (or nil if none exists)
+* ([create-edn-maps](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/create-edn-maps)) ([create-edn-maps](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/create-edn-maps) params-map) - takes optional map of location sources and returns a map of the root, user, project, and extra deps.edn maps
+
+## Data manipulation
+
+These functions can be used to modify or extract information from a deps.edn map:
+
+* ([merge-edns](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/merge-edns) deps-edn-maps) - merge multiple deps.edn maps in a chain
+* ([merge-alias-maps](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/merge-alias-maps)) - like merge-with, for merging alias maps with per-key rules
+* ([combine-aliases](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/combine-aliases)) - find, read, and combine alias maps identified by alias keywords from
+  a deps edn map into a single args map.
 
 # Developer Information
 

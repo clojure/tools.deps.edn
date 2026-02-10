@@ -78,6 +78,9 @@ namespace.
       <a href="#clojure.tools.deps.edn/read-deps" class="toc-entry-anchor">read-deps</a>
       
     </div><div class="toc-entry" style="margin-left: 1em;">
+      <a href="#clojure.tools.deps.edn/read-edn" class="toc-entry-anchor">read-edn</a>
+      
+    </div><div class="toc-entry" style="margin-left: 1em;">
       <a href="#clojure.tools.deps.edn/root-deps" class="toc-entry-anchor">root-deps</a>
       
     </div><div class="toc-entry" style="margin-left: 1em;">
@@ -130,7 +133,7 @@ Opts:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/ebf62bfab3d450f65eda2499d41e518846a2c25a/src/main/clojure/clojure/tools/deps/edn.clj#L107">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L107">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -143,7 +146,7 @@ a deps edn map into a single args map.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/ebf62bfab3d450f65eda2499d41e518846a2c25a/src/main/clojure/clojure/tools/deps/edn.clj#L270">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L273">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -155,7 +158,7 @@ a deps edn map into a single args map.</pre>
     <pre id="var-docstr">Takes optional map of location sources, keys = :root :user :project :extra
 where each key may be:
   :standard (default) - to get the default source
-  string - for file path to source
+  string - for file path to source, relative to current dir context
   nil - to omit
   map - a literal map to use
 
@@ -164,7 +167,7 @@ Keys may be missing if source was nil or file was missing.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/ebf62bfab3d450f65eda2499d41e518846a2c25a/src/main/clojure/clojure/tools/deps/edn.clj#L189">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L192">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -176,7 +179,7 @@ Keys may be missing if source was nil or file was missing.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/ebf62bfab3d450f65eda2499d41e518846a2c25a/src/main/clojure/clojure/tools/deps/edn.clj#L261">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L264">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -188,7 +191,7 @@ Keys may be missing if source was nil or file was missing.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/ebf62bfab3d450f65eda2499d41e518846a2c25a/src/main/clojure/clojure/tools/deps/edn.clj#L225">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L228">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -196,11 +199,14 @@ Keys may be missing if source was nil or file was missing.</pre>
     <span id="var-type">function</span><br />
     <pre id="var-usage">Usage: (project-deps)
 </pre>
-    <pre id="var-docstr">Calculate the project deps.edn location </pre>
+    <pre id="var-docstr">Calculate the project deps.edn location, read and return the deps.edn data.
+
+You may use clojure.tools.deps.util.dir/with-dir to read from a custom project
+dir, either absolute or relative to the current dir context.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/ebf62bfab3d450f65eda2499d41e518846a2c25a/src/main/clojure/clojure/tools/deps/edn.clj#L175">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L175">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -216,7 +222,7 @@ project-deps-path.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/ebf62bfab3d450f65eda2499d41e518846a2c25a/src/main/clojure/clojure/tools/deps/edn.clj#L166">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L166">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -232,7 +238,24 @@ Opts: none for now</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/ebf62bfab3d450f65eda2499d41e518846a2c25a/src/main/clojure/clojure/tools/deps/edn.clj#L127">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L127">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.tools.deps.edn/read-edn">read-edn</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (read-edn r &amp; opts)
+</pre>
+    <pre id="var-docstr">Read edn from Reader r, which should contain exactly one edn value.
+If source exists but is blank, nil is returned.
+Throws if source is unreadable or contains multiple values.
+
+Opts:
+  :path String path to file being read, for error reporting</pre>
+    <pre id="var-specs"></pre>
+    
+    
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L46">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -245,7 +268,7 @@ clojure/tools/deps/deps.edn</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/ebf62bfab3d450f65eda2499d41e518846a2c25a/src/main/clojure/clojure/tools/deps/edn.clj#L141">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L141">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -258,7 +281,7 @@ return the deps.edn data</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/ebf62bfab3d450f65eda2499d41e518846a2c25a/src/main/clojure/clojure/tools/deps/edn.clj#L160">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L160">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -271,7 +294,7 @@ Note that it's possible no file may exist at this location.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/ebf62bfab3d450f65eda2499d41e518846a2c25a/src/main/clojure/clojure/tools/deps/edn.clj#L148">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L148">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -287,7 +310,7 @@ Opts:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/ebf62bfab3d450f65eda2499d41e518846a2c25a/src/main/clojure/clojure/tools/deps/edn.clj#L70">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L70">Source</a>
   </div>
 </div>
 

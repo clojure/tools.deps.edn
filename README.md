@@ -45,13 +45,13 @@ org.clojure/tools.deps.edn {:mvn/version "0.9.13"}
 
 Usually, you should use the `read-deps` function to read a deps.edn file, validate, and canonicalize it:
 
-* (read-deps f & opts) - coerce f to a File, then read, validate, canonicalize and return a deps.edn map
+* ([read-deps](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/read-deps) f & opts) - coerce f to a File, then read, validate, canonicalize and return a deps.edn map
 
 However, these component functions may also occasionally be useful:
 
-* (read-edn r & opts) - reads a single edn value from a Reader r
-* (validate deps-edn & opts) - validate a deps.edn map against the specs and throw or return the valid map
-* (canonicalize deps-edn & opts) - canoncialize a deps.edn map and return it
+* ([read-edn](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/read-edn) r & opts) - reads a single edn value from a Reader r
+* ([validate](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/validate) deps-edn & opts) - validate a deps.edn map against the specs and throw or return the valid map
+* ([canonicalize](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/canonicalize) deps-edn & opts) - canoncialize a deps.edn map and return it
 
 ## Deps chain
 

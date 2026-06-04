@@ -1,6 +1,7 @@
 {:paths ["src/main/clojure" "src/main/resources"]
  :deps {
    org.clojure/clojure {:mvn/version "1.12.5"}
+   rewrite-clj/rewrite-clj {:mvn/version "1.2.54"}
  }
  :aliases {
    :test {:extra-paths ["src/test/clojure"]}

@@ -39,7 +39,7 @@ org.clojure/tools.deps.edn {:mvn/version "0.9.33"}
 </dependency>
 ```
 
-# API 
+# API
 
 ## Reading, validating, and canonicalization
 
@@ -73,6 +73,19 @@ These functions can be used to modify or extract information from a deps.edn map
 * ([merge-alias-maps](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/merge-alias-maps)) - like merge-with, for merging alias maps with per-key rules
 * ([combine-aliases](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/combine-aliases)) - find, read, and combine alias maps identified by alias keywords from
   a deps edn map into a single args map.
+
+## Tool config
+
+These functions read and write per-tool config files. The config file at `<location>/.cli-config/<lib-ns>/<lib-name>.edn` is expected to be a 1-level map with keyword keys, where location is `:user` or `:project`.
+Tools may also use a sibling directory at `<location>/.cli-config/<lib-ns>/<lib-name>/` for additional files as needed.
+
+* ([config-dir](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn.config/config-dir) location lib) - return the tool's config directory File
+* ([config-file](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn.config/config-file) location lib path) - return a File within the tool's config directory
+* ([config-edn-file](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn.config/config-edn-file) location lib) - return the tool's config edn File
+* ([config-edn](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn.config/config-edn) location lib) - read the tool's config edn file, returns its value or nil
+* ([config](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn.config/config) lib & {:keys [defaults overrides]}) - merges in order :defaults < user config < project config < :overrides
+* ([write-config](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn.config/write-config) location lib config) - write the config as EDN, overwriting any existing file
+* ([write-val](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn.config/write-val) location lib k v) - update a single key in the config file, preserving formatting
 
 # Developer Information
 

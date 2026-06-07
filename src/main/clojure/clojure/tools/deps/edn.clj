@@ -145,17 +145,24 @@
   (let [url (jio/resource "clojure/tools/deps/deps.edn")]
     (read-edn (BufferedReader. (InputStreamReader. (.openStream url))))))
 
-(defn user-deps-path
-  "Use the same logic as clj to calculate the location of the user deps.edn.
-  Note that it's possible no file may exist at this location."
+(defn user-config-dir
+  "Use the same logic as clj to calculate the location of the user config dir.
+  Note that it's possible no dir may exist at this location.
+  Return path as string."
   []
   (let [config-env (System/getenv "CLJ_CONFIG")
         xdg-env (System/getenv "XDG_CONFIG_HOME")
-        home (System/getProperty "user.home")
-        config-dir (cond config-env config-env
-                         xdg-env (str xdg-env File/separator "clojure")
-                         :else (str home File/separator ".clojure"))]
-    (str config-dir File/separator "deps.edn")))
+        home (System/getProperty "user.home")]
+    (cond config-env config-env
+          xdg-env (str xdg-env File/separator "clojure")
+          :else (str home File/separator ".clojure"))))
+
+(defn user-deps-path
+  "Use the same logic as clj to calculate the location of the user deps.edn.
+  Note that it's possible no file may exist at this location.
+  Returns path as string."
+  []
+  (str (user-config-dir) File/separator "deps.edn"))
 
 (defn user-deps
   "Calculate the user deps.edn per user-deps-path, read and

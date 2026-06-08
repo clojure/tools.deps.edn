@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>clojure.tools.deps.edn - tools.deps.edn 0.9.14-SNAPSHOT API documentation</title>
+    <title>clojure.tools.deps.edn - tools.deps.edn 0.9.34-SNAPSHOT API documentation</title>
     <link rel="icon" href="static/favicon.png" />
     <link rel="shortcut icon" href="static/favicon.png" />
     <link rel="stylesheet" href="static/clojure.css" type="text/css" media="all" />
@@ -25,7 +25,7 @@ namespace.
       <div id="leftcolumn"><div style="text-align: center;"></div>
 <div class="menu">
   <div class="WikiCustomNav WikiElement wiki">
-    <span class="toc-header"><span id="project-name">tools.deps.edn</span> <span id="version">0.9.14-SNAPSHOT</span> API</span><br />
+    <span class="toc-header"><span id="project-name">tools.deps.edn</span> <span id="version">0.9.34-SNAPSHOT</span> API</span><br />
     <ul>
       <li><a href="index.html" class="wiki_link">Overview</a></li>
       <li><a href="api-index.html" class="wiki_link">API Index</a></li>
@@ -84,6 +84,9 @@ namespace.
       <a href="#clojure.tools.deps.edn/root-deps" class="toc-entry-anchor">root-deps</a>
       
     </div><div class="toc-entry" style="margin-left: 1em;">
+      <a href="#clojure.tools.deps.edn/user-config-dir" class="toc-entry-anchor">user-config-dir</a>
+      
+    </div><div class="toc-entry" style="margin-left: 1em;">
       <a href="#clojure.tools.deps.edn/user-deps" class="toc-entry-anchor">user-deps</a>
       
     </div><div class="toc-entry" style="margin-left: 1em;">
@@ -100,7 +103,7 @@ namespace.
 </div>
 </div>
                 <div id="content-tag"><h1 id="overview">API for <span id="clojure.tools.deps.edn">clojure.tools.deps.edn</span>
-  - <span id="header-project">tools.deps.edn</span> <span id="header-version">0.9.14-SNAPSHOT</span><span id="header-status-block"> (<span id="header-status">in development</span>)</span>
+  - <span id="header-project">tools.deps.edn</span> <span id="header-version">0.9.34-SNAPSHOT</span><span id="header-status-block"> (<span id="header-status">in development</span>)</span>
   </h1>
 
 <br />Full namespace name: <span id="long-name">clojure.tools.deps.edn</span>
@@ -133,7 +136,7 @@ Opts:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L107">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L107">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -146,7 +149,7 @@ a deps edn map into a single args map.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L273">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L280">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -167,7 +170,7 @@ Keys may be missing if source was nil or file was missing.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L192">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L199">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -179,7 +182,7 @@ Keys may be missing if source was nil or file was missing.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L264">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L271">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -191,7 +194,7 @@ Keys may be missing if source was nil or file was missing.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L228">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L235">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -206,7 +209,7 @@ dir, either absolute or relative to the current dir context.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L175">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L182">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -222,7 +225,7 @@ project-deps-path.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L166">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L173">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -238,7 +241,7 @@ Opts: none for now</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L127">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L127">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -255,7 +258,7 @@ Opts:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L46">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L46">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -268,7 +271,21 @@ clojure/tools/deps/deps.edn</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L141">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L141">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.tools.deps.edn/user-config-dir">user-config-dir</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (user-config-dir)
+</pre>
+    <pre id="var-docstr">Use the same logic as clj to calculate the location of the user config dir.
+Note that it's possible no dir may exist at this location.
+Return path as string.</pre>
+    <pre id="var-specs"></pre>
+    
+    
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L148">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -281,7 +298,7 @@ return the deps.edn data</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L160">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L167">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -290,11 +307,12 @@ return the deps.edn data</pre>
     <pre id="var-usage">Usage: (user-deps-path)
 </pre>
     <pre id="var-docstr">Use the same logic as clj to calculate the location of the user deps.edn.
-Note that it's possible no file may exist at this location.</pre>
+Note that it's possible no file may exist at this location.
+Returns path as string.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L148">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L160">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -310,7 +328,7 @@ Opts:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/07ee46c554e3e7d99feaf56fe2230bfd65322653/src/main/clojure/clojure/tools/deps/edn.clj#L70">Source</a>
+    <a id="var-source" href="https://github.com/clojure/tools.deps.edn/blob/1eb36c796873313a646e002c2a915935caaec7aa/src/main/clojure/clojure/tools/deps/edn.clj#L70">Source</a>
   </div>
 </div>
 

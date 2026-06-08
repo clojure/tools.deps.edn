@@ -58,6 +58,7 @@ However, these component functions may also occasionally be useful:
 These functions are available to get individual or multiple of the standard deps.edn maps in the chain:
 
 * ([root-deps](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/root-deps)) - return the root deps read as a resource
+* ([user-config-dir](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/user-config-dir)) - calculate the path to the user config dir
 * ([user-deps-path](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/user-deps-path)) - calculate the path to the user deps.edn
 * ([user-deps](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/user-deps)) - use `user-deps-path`, then read and return it (or nil if none exists)
 * ([project-deps-path](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/project-deps-path)) - calculate the path to the project deps.edn, using the dir context as the current directory

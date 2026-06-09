@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 0.9.38 on Jun 9, 2026
   * Add clojure.tools.deps.edn/project-dir function
 * 0.9.33 on Jun 7, 2026
   * Add clojure.tools.deps.edn/user-config-dir function

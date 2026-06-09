@@ -149,7 +149,7 @@
   "Use the same logic as clj to calculate the location of the user config dir.
   Note that it's possible no dir may exist at this location.
   Return path as string."
-  []
+  ^String []
   (let [config-env (System/getenv "CLJ_CONFIG")
         xdg-env (System/getenv "XDG_CONFIG_HOME")
         home (System/getProperty "user.home")]
@@ -161,7 +161,7 @@
   "Use the same logic as clj to calculate the location of the user deps.edn.
   Note that it's possible no file may exist at this location.
   Returns path as string."
-  []
+  ^String []
   (str (user-config-dir) File/separator "deps.edn"))
 
 (defn user-deps
@@ -170,14 +170,21 @@
   []
   (-> (user-deps-path) jio/file dir/canonicalize read-deps))
 
+(defn project-dir
+  "Calculate the project directory, usually . by default, but
+  may be pushed to a new directory using the
+  clojure.tools.deps.util.dir API."
+  ^String []
+  (.getPath dir/*the-dir*))
+
 (defn project-deps-path
   "Calculate the project deps.edn location. This
   is the deps.edn in the current directory, as defined by
   clojure.tools.deps.util.dir/*the-dir* - use with-dir
   to push a new local directory context around a call to
   project-deps-path."
-  []
-  (str dir/*the-dir* File/separator "deps.edn"))
+  ^String []
+  (str (project-dir) File/separator "deps.edn"))
 
 (defn project-deps
   "Calculate the project deps.edn location, read and return the deps.edn data.

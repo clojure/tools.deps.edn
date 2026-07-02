@@ -22,7 +22,7 @@
 
 (set! *warn-on-reflection* true)
 
-(def ^:dynamic *the-dir*
+(def ^:dynamic ^File *the-dir*
   "Thread-local directory context for resolving relative directories.
   Defaults to current directory. Should always hold an absolute directory
   java.io.File, never null."

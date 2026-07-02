@@ -1,8 +1,8 @@
 Changelog
 ===========
 
-* next
-  * Fix reflection warning in c.t.d.e/project-dir
+* 0.9.42 on Jul 2, 2026
+  * TDEPS-283 - Fix reflection warning in c.t.d.e/project-dir
 * 0.9.38 on Jun 9, 2026
   * Add clojure.tools.deps.edn/project-dir function
 * 0.9.33 on Jun 7, 2026

@@ -40,7 +40,7 @@
   file at path with the message format fmt (which should have one
   variable for the path)."
   ^Throwable [fmt & {:keys [path]}]
-  (let [abs-path (.getAbsolutePath (jio/file path))]
+  (let [abs-path (if path (.getAbsolutePath (jio/file path)) "unknown path")]
     (ex-info (format fmt abs-path) {:path abs-path})))
 
 (defn read-edn
@@ -49,8 +49,8 @@
   Throws if source is unreadable or contains multiple values.
 
   Opts:
-    :path String path to file being read, for error reporting"
-  [^Reader r & opts]
+    :path String path to file being read, for error reporting (recommended)"
+  [^Reader r & {:as opts}]
   (with-open [rdr (PushbackReader. r)]
     (let [EOF (Object.)]
       (try
@@ -73,15 +73,15 @@
 
   Opts:
     :path String path to file being read"
-  [deps-edn & opts]
+  [deps-edn & {:as opts}]
   (if (specs/valid-deps? deps-edn)
     deps-edn
-    (throw (io-err (str "Error reading deps %s. " (specs/explain-deps deps-edn)) opts))))
+    (throw (io-err (str "Error validating deps in %s. " (specs/explain-deps deps-edn)) opts))))
 
 ;;;; Canonicalize
 
 (defn- canonicalize-sym
-  [s & opts]
+  [s & {:as opts}]
   (if (simple-symbol? s)
     (let [cs (as-> (name s) n (symbol n n))]
       (printerrln "DEPRECATED: Libs must be qualified, change" s "=>" cs
@@ -90,13 +90,13 @@
     s))
 
 (defn- canonicalize-exclusions
-  [{:keys [exclusions] :as coord} & opts]
+  [{:keys [exclusions] :as coord} & {:as opts}]
   (if (seq (filter simple-symbol? exclusions))
     (assoc coord :exclusions (mapv #(canonicalize-sym % opts) exclusions))
     coord))
 
 (defn- canonicalize-dep-map
-  [deps-map & opts]
+  [deps-map & {:as opts}]
   (when deps-map
     (reduce-kv (fn [acc lib coord]
                  (let [new-lib (if (simple-symbol? lib) (canonicalize-sym lib opts) lib)
@@ -110,7 +110,7 @@
 
   Opts:
     :path String path to file being read"
-  [deps-edn & opts]
+  [deps-edn & {:as opts}]
   (walk/postwalk
     (fn [x]
       (if (map? x)
@@ -130,9 +130,9 @@
   Use read-edn, validate, or canonicalize for individual steps.
 
   Opts: none for now"
-  [f & opts]
+  [f & {:as opts}]
   (let [file (jio/file f)
-        opts {:path (.getPath file)}]
+        opts (assoc opts :path (.getPath file))]
     (when (.exists file)
       (-> file jio/reader (read-edn opts) (validate opts) (canonicalize opts)))))
 

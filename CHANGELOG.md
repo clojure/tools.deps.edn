@@ -1,7 +1,7 @@
 Changelog
 ===========
 
-* next
+* 0.9.48 on Jul 27, 2026
   * Fix error reporting regressions for file paths
 * 0.9.42 on Jul 2, 2026
   * TDEPS-283 - Fix reflection warning in c.t.d.e/project-dir

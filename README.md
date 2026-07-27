@@ -53,6 +53,8 @@ However, these component functions may also occasionally be useful:
 * ([validate](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/validate) deps-edn & opts) - validate a deps.edn map against the specs and throw or return the valid map
 * ([canonicalize](https://clojure.github.io/tools.deps.edn/#clojure.tools.deps.edn/canonicalize) deps-edn & opts) - canoncialize a deps.edn map and return it
 
+All of these functions take an option `:path` that can be used to specify the file path being read, validated, or canonicalized, which will be used in error reporting.
+
 ## Deps chain
 
 These functions are available to get individual or multiple of the standard deps.edn maps in the chain:

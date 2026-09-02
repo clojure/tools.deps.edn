@@ -20,7 +20,7 @@
   <properties>
     <!-- used for build -->
     <clojure.warnOnReflection>true</clojure.warnOnReflection>
-    <clojure.version>1.12.4</clojure.version>
+    <clojure.version>1.12.6</clojure.version>
   </properties>
 
   <dependencies>

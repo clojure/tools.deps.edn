@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+* 0.9.57 on Sep 2, 2026
+  * Update to Clojure 1.12.6
 * 0.9.53 on Sep 2, 2026
   * Update to Clojure 1.12.6
 * 0.9.48 on Jul 27, 2026

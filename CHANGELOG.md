@@ -1,6 +1,8 @@
 Changelog
 ===========
 
+* next
+  * Update to Clojure 1.12.6
 * 0.9.48 on Jul 27, 2026
   * Fix error reporting regressions for file paths
 * 0.9.42 on Jul 2, 2026
